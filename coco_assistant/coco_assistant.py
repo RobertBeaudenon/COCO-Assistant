@@ -75,7 +75,7 @@ class COCO_Assistant():
 
         self.ann_anchors = []
 
-    def merge(self, merge_images=True, image_folder_name, annotation_folder_name):
+    def merge(self, image_folder_name, annotation_folder_name, merge_images=True):
         """
         Function for merging multiple coco datasets
         """
@@ -83,7 +83,7 @@ class COCO_Assistant():
         self.resim_dir = os.path.join(
             self.res_dir, 'merged', image_folder_name)
         self.resann_dir = os.path.join(
-            self.res_dir, 'merged', image_folder_name)
+            self.res_dir, 'merged',  annotation_folder_name)
 
         # Create directories for merged results and clear the previous ones
         # The exist_ok is for dealing with merged folder
