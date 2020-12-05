@@ -50,12 +50,15 @@ class COCO_Assistant():
         if os.path.exists(self.res_dir) is False:
             os.mkdir(self.res_dir)
 
-        self.imgfolders = sorted([i for i in os.listdir(self.img_dir) if (os.path.isdir(os.path.join(self.img_dir, i)) is True and not i.startswith('.'))])
-        self.jsonfiles = sorted([j for j in os.listdir(ann_dir) if j[-5:] == ".json"])
+        self.imgfolders = sorted([i for i in os.listdir(self.img_dir) if (
+            os.path.isdir(os.path.join(self.img_dir, i)) is True and not i.startswith('.'))])
+        self.jsonfiles = sorted(
+            [j for j in os.listdir(ann_dir) if j[-5:] == ".json"])
         self.names = [n[:-5] for n in self.jsonfiles]
 
         if self.names != self.imgfolders:
-            raise AssertionError("Image dir and corresponding json file must have the same name")
+            raise AssertionError(
+                "Image dir and corresponding json file must have the same name")
 
         # Note: Add check for confirming these folders only contain .jpg and .json respectively
         logging.debug("Number of image folders = %s", len(self.imgfolders))
@@ -66,18 +69,21 @@ class COCO_Assistant():
         if not self.imgfolders:
             raise AssertionError("Image folders not passed")
 
-        self.annfiles = [COCO(os.path.join(ann_dir, i)) for i in self.jsonfiles]
+        self.annfiles = [COCO(os.path.join(ann_dir, i))
+                         for i in self.jsonfiles]
         self.anndict = dict(zip(self.jsonfiles, self.annfiles))
 
         self.ann_anchors = []
 
-    def merge(self, merge_images=True):
+    def merge(self, merge_images=True, image_folder_name, annotation_folder_name):
         """
         Function for merging multiple coco datasets
         """
 
-        self.resim_dir = os.path.join(self.res_dir, 'merged', 'images')
-        self.resann_dir = os.path.join(self.res_dir, 'merged', 'annotations')
+        self.resim_dir = os.path.join(
+            self.res_dir, 'merged', image_folder_name)
+        self.resann_dir = os.path.join(
+            self.res_dir, 'merged', image_folder_name)
 
         # Create directories for merged results and clear the previous ones
         # The exist_ok is for dealing with merged folder
@@ -95,7 +101,8 @@ class COCO_Assistant():
 
         if merge_images:
             print("Merging image dirs")
-            im_dirs = [os.path.join(self.img_dir, folder) for folder in self.imgfolders]
+            im_dirs = [os.path.join(self.img_dir, folder)
+                       for folder in self.imgfolders]
             imext = [".png", ".jpg"]
 
             logging.debug("Merging Image Dirs...")
@@ -103,7 +110,8 @@ class COCO_Assistant():
             for imdir in tqdm(im_dirs):
                 ims = [i for i in os.listdir(imdir) if i[-4:].lower() in imext]
                 for im in ims:
-                    shutil.copyfile(os.path.join(imdir, im), os.path.join(self.resim_dir, im))
+                    shutil.copyfile(os.path.join(imdir, im),
+                                    os.path.join(self.resim_dir, im))
 
         else:
             logging.debug("Not merging Image Dirs...")
@@ -133,7 +141,8 @@ class COCO_Assistant():
                     cann['info'] = cj['info']
                 if 'licenses' in list(cj.keys()):
                     cann['licenses'] = cj['licenses']
-                cann['categories'] = sorted(cj['categories'], key=lambda i: i['id'])
+                cann['categories'] = sorted(
+                    cj['categories'], key=lambda i: i['id'])
 
                 last_imid = cann['images'][-1]['id']
                 last_annid = cann['annotations'][-1]['id']
@@ -171,7 +180,8 @@ class COCO_Assistant():
 
                 # Remap categories
                 cmapper = CatRemapper(cann['categories'], cj['categories'])
-                cann['categories'], cj['annotations'] = cmapper.remap(cj['annotations'])
+                cann['categories'], cj['annotations'] = cmapper.remap(
+                    cj['annotations'])
 
                 cann['images'] = cann['images'] + cj['images']
                 cann['annotations'] = cann['annotations'] + cj['annotations']
@@ -225,7 +235,8 @@ class COCO_Assistant():
             x = input()
             x = ast.literal_eval(x)
             if isinstance(x, list) is False:
-                raise AssertionError("Input must be a list of categories to be removed")
+                raise AssertionError(
+                    "Input must be a list of categories to be removed")
             if all(elem in cats for elem in x):
                 self.rcats = x
             else:
@@ -233,7 +244,8 @@ class COCO_Assistant():
 
         else:
             if jc is None or rcats is None:
-                raise AssertionError("Both json choice and rcats need to be provided in non-interactive mode")
+                raise AssertionError(
+                    "Both json choice and rcats need to be provided in non-interactive mode")
             self.jc = jc
             ind = self.jsonfiles.index(self.jc.lower())
             ann = self.annfiles[ind]
@@ -265,9 +277,11 @@ class COCO_Assistant():
         Function for displaying statistics.
         """
         if stat == "area":
-            stats.pi_area_split(self.annfiles, self.names, areaRng=arearng, save=save)
+            stats.pi_area_split(self.annfiles, self.names,
+                                areaRng=arearng, save=save)
         elif stat == "cat":
-            stats.cat_count(self.annfiles, self.names, show_count=show_count, save=save)
+            stats.cat_count(self.annfiles, self.names,
+                            show_count=show_count, save=save)
 
     def anchors(self, n, fmt=None, recompute=False):
         """
@@ -319,9 +333,9 @@ if __name__ == "__main__":
 
     cas = COCO_Assistant(img_dir, ann_dir)
 
-    #cas.merge()
-    #cas.remove_cat()
-    #cas.ann_stats(stat="area",arearng=[10,144,512,1e5],save=False)
+    # cas.merge()
+    # cas.remove_cat()
+    # cas.ann_stats(stat="area",arearng=[10,144,512,1e5],save=False)
     #cas.ann_stats(stat="cat", show_count=False, save=False)
-    #cas.visualise()
-    #cas.anchors(2)
+    # cas.visualise()
+    # cas.anchors(2)
