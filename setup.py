@@ -18,7 +18,7 @@ REQUIRES_PYTHON = '>=3.6.0'
 
 
 # What packages are required for this module to be executed?
-def list_reqs(fname='requirements.txt'):
+def list_reqs(fname='/content/COCO-Assistant/requirements.txt'):
     with open(fname) as f:
         requirements = f.read().splitlines()
 
@@ -56,7 +56,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 # Import the README and use it as the long-description.
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
 try:
-    with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    with io.open(os.path.join(here, '/content/COCO-Assistant/README.md'), encoding='utf-8') as f:
         long_description = '\n' + f.read()
 except OSError:
     long_description = DESCRIPTION
@@ -83,7 +83,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    download_url = 'https://github.com/ashnair1/COCO-Assistant/archive/v0.1.0.tar.gz',
+    download_url='https://github.com/ashnair1/COCO-Assistant/archive/v0.1.0.tar.gz',
     packages=find_packages(exclude=('tests',)),
     package_data={'coco_assistant': ['VERSION']},
     install_requires=required,

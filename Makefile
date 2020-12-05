@@ -1,16 +1,16 @@
 all:
 	echo "Building coco_assistant"
-	python setup.py sdist bdist_wheel
-	pip install -e .
+	python "/content/COCO-Assistant/setup.py" sdist bdist_wheel
+	pip install -e "/content/COCO-Assistant/."
 
 remove:
-	pip uninstall -y coco-assistant
+	pip uninstall -y "/content/COCO-Assistant/coco-assistant"
 	rm -rf build dist *.egg-info
 	
 
 clean:
-	pip uninstall -y coco-assistant
+	pip uninstall -y "/content/COCO-Assistant/coco-assistant"t
 	rm -rf build dist *.egg-info
 	echo "Rebuilding"
-	python setup.py sdist bdist_wheel
-	pip install -e .
+	python "/content/COCO-Assistant/setup.py" sdist bdist_wheel
+	pip install -e "/content/COCO-Assistant/."
