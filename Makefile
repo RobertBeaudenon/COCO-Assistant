@@ -9,7 +9,7 @@ remove:
 	
 
 clean:
-	pip uninstall -y "/content/COCO-Assistant/coco-assistant"t
+	pip uninstall -y "/content/COCO-Assistant/coco-assistant"
 	rm -rf build dist *.egg-info
 	echo "Rebuilding"
 	python "/content/COCO-Assistant/setup.py" sdist bdist_wheel
